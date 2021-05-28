@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"strings"
 	"sync"
 	"time"
 
@@ -132,9 +133,9 @@ func configFromConnectionString(connStr string) (*Config, error) {
 		&aws.Config{MaxRetries: aws.Int(3)},
 	}
 
-	accountKeyID := args.Get("access_key_id")
-	secretAccessKey := args.Get("secret_access_key")
-	sessionToken := args.Get("session_token")
+	accountKeyID := strings.Replace(args.Get("access_key_id")," ","+",-1)
+	secretAccessKey := strings.Replace(args.Get("secret_access_key")," ","+",-1)
+	sessionToken := strings.Replace(args.Get("session_token")," ","+",-1)
 	if accountKeyID != "" || secretAccessKey != "" || sessionToken != "" {
 		cre := credentials.NewStaticCredentials(accountKeyID, secretAccessKey, sessionToken)
 		acfg = append(acfg, &aws.Config{Credentials: cre})
@@ -159,6 +160,5 @@ func configFromConnectionString(connStr string) (*Config, error) {
 			return nil, fmt.Errorf("invalid poll_frequency parameter: %s", frequencyStr)
 		}
 	}
-
 	return &cfg, nil
 }
