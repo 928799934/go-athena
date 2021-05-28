@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 	"errors"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"net/url"
 	"sync"
 	"time"
@@ -127,10 +128,22 @@ func configFromConnectionString(connStr string) (*Config, error) {
 
 	var cfg Config
 
-	var acfg []*aws.Config
+	var acfg = []*aws.Config{
+		&aws.Config{MaxRetries: aws.Int(3)},
+	}
+
+	accountKeyID := args.Get("access_key_id")
+	secretAccessKey := args.Get("secret_access_key")
+	sessionToken := args.Get("session_token")
+	if accountKeyID != "" || secretAccessKey != "" || sessionToken != "" {
+		cre := credentials.NewStaticCredentials(accountKeyID, secretAccessKey, sessionToken)
+		acfg = append(acfg, &aws.Config{Credentials: cre})
+	}
+
 	if region := args.Get("region"); region != "" {
 		acfg = append(acfg, &aws.Config{Region: aws.String(region)})
 	}
+
 	cfg.Session, err = session.NewSession(acfg...)
 	if err != nil {
 		return nil, err

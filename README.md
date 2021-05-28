@@ -6,11 +6,11 @@ go-athena is a simple Golang [database/sql] driver for [Amazon Athena](https://a
 ```go
 import (
     "database/sql"
-    _ "github.com/segmentio/go-athena"
+    _ "github.com/928799934/go-athena"
 )
 
 func main() {
-  db, _ := sql.Open("athena", "db=default&output_location=s3://results")
+  db, _ := sql.Open("athena", "access_key_id=&secret_access_key=&session_token=&region=&poll_frequency=1s&db=default&output_location=s3://results")
   rows, _ := db.Query("SELECT url, code from cloudfront")
 
   for rows.Next() {
