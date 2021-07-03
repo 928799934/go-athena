@@ -1,4 +1,5 @@
 [![](https://godoc.org/github.com/segmentio/go-athena?status.svg)](https://godoc.org/github.com/segmentio/go-athena)
+
 # go-athena
 
 go-athena is a simple Golang [database/sql] driver for [Amazon Athena](https://aws.amazon.com/athena/).
@@ -19,7 +20,6 @@ func main() {
     rows.Scan(&url, &code)
   }
 }
-
 ```
 
 It provides a higher-level, idiomatic wrapper over the
@@ -33,6 +33,45 @@ For example,
 - Instead of reaching for semaphores, you can use [database/sql.DB.SetMaxOpenConns](https://golang.org/pkg/database/sql/#DB.SetMaxOpenConns)
 - And, so on...
 
+## diff
+Support Specific AWS key
+
+### segmentio/go-athena
+```go
+import (
+    "database/sql"
+    _ "github.com/segmentio/go-athena"
+)
+
+func main() {
+  db, _ := sql.Open("athena", "db=default&output_location=s3://results")
+  rows, _ := db.Query("SELECT url, code from cloudfront")
+
+  for rows.Next() {
+    var url string
+    var code int
+    rows.Scan(&url, &code)
+  }
+}
+```
+### 928799934/go-athena
+```go
+import (
+    "database/sql"
+    _ "github.com/928799934/go-athena"
+)
+
+func main() {
+  db, _ := sql.Open("athena", "access_key_id=&secret_access_key=&session_token=&region=&poll_frequency=1s&db=default&output_location=s3://results")
+  rows, _ := db.Query("SELECT url, code from cloudfront")
+
+  for rows.Next() {
+    var url string
+    var code int
+    rows.Scan(&url, &code)
+  }
+}
+```
 
 ## Caveats
 
