@@ -33,10 +33,11 @@ For example,
 - Instead of reaching for semaphores, you can use [database/sql.DB.SetMaxOpenConns](https://golang.org/pkg/database/sql/#DB.SetMaxOpenConns)
 - And, so on...
 
-## diff
+## diff 
 Support Specific AWS key
 
 ### segmentio/go-athena
+
 ```go
 import (
     "database/sql"
@@ -54,7 +55,9 @@ func main() {
   }
 }
 ```
+
 ### 928799934/go-athena
+
 ```go
 import (
     "database/sql"
